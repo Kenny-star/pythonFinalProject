@@ -6,13 +6,6 @@ myHeader = {'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,ima
 
 dht = adafruit_dht.DHT11(board.D4, use_pulseio=False)
 
-
-def postToApi(json_obj):
-    response = requests.post("/addLogTemp", headers=myHeader, data=json_obj)
-    while response.status_code != 200:
-        response
-
-
 while True:
     try:
 
@@ -25,11 +18,13 @@ while True:
 
         print("Last valid input: " + timestamp + "\n")
 
-        current_info = {'Temperature': temperature,
-                        'Humidity': humidity,
-                        'Timestamp': timestamp}
+        current_info = {"Temperature": temperature,
+                        "Humidity": humidity,
+                        "Timestamp": timestamp}
 
-        postToApi(current_info)
+        response = requests.post("https://webapprouting.herokuapp.com/addLogTemp", headers=myHeader, data=current_info)
+
+        print(response)
         list.append(current_info)
 
         print(list)
@@ -43,6 +38,7 @@ while True:
 
         time.sleep(10)
 
+
     except RuntimeError as error:
         print("A Runtime Error has been encountered: " + error.args[
             0] + "\nThe temperature & humidity reading will re-evaluated after 10 seconds.\n")
@@ -52,6 +48,10 @@ while True:
     except Exception as error:
         dht.exit()
         raise error
+
+
+
+
 
 
 
