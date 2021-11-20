@@ -56,5 +56,5 @@ def add_Log_Temp():
 
     conn.close()
 
-
-app.run()
+if __name__ == '__main__'
+    app.run()
