@@ -15,8 +15,6 @@ tasks = [
 ]
 
 app = flask.Flask(__name__)
-app.config["DEBUG"] = True
-
 
 @app.route('/', methods=['GET'])
 def home():
@@ -56,5 +54,6 @@ def add_Log_Temp():
     mycursor.close()
 
     conn.close()
+
 
 app.run()
