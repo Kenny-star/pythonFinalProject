@@ -38,6 +38,7 @@ def home():
 
 @app.route('/addLogTemp', methods=['POST'])
 def add_Log_Temp():
+    conn = connection.connect()
     mycursor = conn.cursor()
     query = ("INSERT INTO final (Temperature, Humidity, Timestamp) VALUES (%s, %s, %s);")
 
