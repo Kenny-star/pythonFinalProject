@@ -6,8 +6,9 @@ myHeader = {'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,ima
 
 dht = adafruit_dht.DHT11(board.D4, use_pulseio=False)
 
+
 def postToApi(json_obj):
-    response = requests.post("'/addLogTemp'", headers=myHeader, data=json_obj)
+    response = requests.post("/addLogTemp", headers=myHeader, data=json_obj)
     while response.status_code != 200:
         response
 
@@ -41,7 +42,6 @@ while True:
             writer.writerow({'Temperature': temperature, 'Humidity': humidity, 'Timestamp': timestamp})
 
         time.sleep(10)
-
 
     except RuntimeError as error:
         print("A Runtime Error has been encountered: " + error.args[
