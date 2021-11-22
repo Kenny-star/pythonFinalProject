@@ -2,7 +2,8 @@ import flask, RPi.GPIO as GPIO, time, datetime, csv, adafruit_dht, board, reques
 
 list = []
 myHeader = {'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,' 'image/webp,/;q=0.8',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:93.0) Gecko/20100101 ' 'Firefox/93.0'}
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:93.0) Gecko/20100101 ' 'Firefox/93.0',
+            'Content-Type': 'application/json'}
 
 dht = adafruit_dht.DHT11(board.D4, use_pulseio=False)
 
