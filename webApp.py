@@ -7,13 +7,6 @@ from flask import Flask
 myHeader = {'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,' 'image/webp,/;q=0.8',
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:93.0) Gecko/20100101 ' 'Firefox/93.0',
             'Content-Type': 'application/json'}
-tasks = [
-    {
-        'Temperature': 34,
-        'Humidity': 32,
-        'Timestamp': "2020-02-02 20:20:20"
-    }
-]
 
 app = Flask(__name__)
 
@@ -43,9 +36,10 @@ def add_Log_Temp():
     mycursor = conn.cursor()
     query = "INSERT INTO final (Temperature, Humidity, Timestamp1) VALUES (%s, %s, %s);"
 
-    temp_data = request.json["Temperature"]
-    hum_data = request.json["Humidity"]
-    time_data = request.json["Timestamp1"]
+    r = request.get_json()
+    temp_data = r["Temperature"]
+    hum_data = r["Humidity"]
+    time_data = r["Timestamp1"]
 
     val = (temp_data, hum_data, time_data)
 
