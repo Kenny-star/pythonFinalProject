@@ -20,7 +20,7 @@ while True:
 
         current_info = {"Temperature": temperature,
                         "Humidity": humidity,
-                        "Timestamp": timestamp}
+                        "Timestamp1": timestamp}
 
         response = requests.post("https://webapprouting.herokuapp.com/addLogTemp", headers=myHeader, data=current_info)
 
@@ -31,10 +31,10 @@ while True:
         print()
 
         with open('tempLog.csv', mode='a') as csv_file:
-            fieldnames = ['Temperature', 'Humidity', 'Timestamp']
+            fieldnames = ['Temperature', 'Humidity', 'Timestamp1']
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
 
-            writer.writerow({'Temperature': temperature, 'Humidity': humidity, 'Timestamp': timestamp})
+            writer.writerow({'Temperature': temperature, 'Humidity': humidity, 'Timestamp1': timestamp})
 
         time.sleep(10)
 
