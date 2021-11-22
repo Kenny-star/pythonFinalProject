@@ -40,7 +40,7 @@ def home():
 def add_Log_Temp():
     conn = connection.connect()
     mycursor = conn.cursor()
-    query = "INSERT INTO final (Temperature, Humidity, Timestamp) VALUES (%s, %s, %s);"
+    query = "INSERT INTO final (Temperature, Humidity, Timestamp1) VALUES (%s, %s, %s);"
 
     temp_data = request.json["Temperature"]
     hum_data = request.json["Humidity"]
