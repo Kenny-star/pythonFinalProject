@@ -42,9 +42,10 @@ def add_Log_Temp():
     mycursor = conn.cursor()
     query = "INSERT INTO final (Temperature, Humidity, Timestamp) VALUES (%s, %s, %s);"
 
-    temp_data = request.json['Temperature']
-    hum_data = request.json['Humidity']
-    time_data = request.json['Timestamp1']
+    r = request.json()
+    temp_data = r["Temperature"]
+    hum_data = r["Humidity"]
+    time_data = r["Timestamp1"]
 
     val = (temp_data, hum_data, time_data)
 
