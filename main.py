@@ -2,8 +2,7 @@ import flask, RPi.GPIO as GPIO, time, datetime, csv, adafruit_dht, board, reques
 
 list = []
 myHeader = {'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,' 'image/webp,/;q=0.8',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:93.0) Gecko/20100101 ' 'Firefox/93.0',
-            'Content-Type': 'application/json'}
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:93.0) Gecko/20100101 ' 'Firefox/93.0'}
 
 dht = adafruit_dht.DHT11(board.D4, use_pulseio=False)
 
@@ -23,7 +22,7 @@ while True:
                         "Humidity": humidity,
                         "Timestamp1": timestamp}
 
-        response = requests.post("https://webapprouting.herokuapp.com/addLogTemp", headers=myHeader, data=current_info)
+        response = requests.post("https://webapprouting.herokuapp.com/addLogTemp", headers=myHeader, json=current_info)
 
         print(response)
         list.append(current_info)
@@ -49,3 +48,12 @@ while True:
     except Exception as error:
         dht.exit()
         raise error
+
+
+
+
+
+
+
+
+
