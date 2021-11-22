@@ -1,14 +1,11 @@
+import flask
 from flask import request, jsonify, abort
 import requests
 import connection
 from flask import Flask
 
 
-myHeader = {'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,' 'image/webp,/;q=0.8',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:93.0) Gecko/20100101 ' 'Firefox/93.0',
-            }
-
-app = Flask(__name__)
+app = flask.Flask(__name__)
 
 
 @app.route('/', methods=['GET'])
@@ -36,10 +33,9 @@ def add_Log_Temp():
     mycursor = conn.cursor()
     query = "INSERT INTO final (Temperature, Humidity, Timestamp1) VALUES (%s, %s, %s);"
 
-    r = request.get_json()
-    temp_data = r["Temperature"]
-    hum_data = r["Humidity"]
-    time_data = r["Timestamp1"]
+    temp_data = request.json["Temperature"]
+    hum_data = request.json["Humidity"]
+    time_data = request.json["Timestamp1"]
 
     val = (temp_data, hum_data, time_data)
 
