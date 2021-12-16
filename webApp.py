@@ -54,8 +54,8 @@ def add_Log_Temp():
     mycursor.execute(query3, val3)
     conn.commit()
 
-    mycursor.execute(query4, temp_data)
-    conn.commit()
+    # mycursor.execute(query4, temp_data)
+    # conn.commit()
 
     mycursor.close()
 
