@@ -47,10 +47,11 @@ def add_Log_Temp():
 
     mycursor.execute(query, val)
     mycursor.execute(query2, val2)
+    conn.commit()
     value_id = mycursor.lastrowid
     mycursor.execute(query3, val3)
-    unit_id = mycursor.lastrowid
     conn.commit()
+    unit_id = mycursor.lastrowid
 
     val4 = (temp_data, value_id, unit_id)
     mycursor.execute(query4, val4)
