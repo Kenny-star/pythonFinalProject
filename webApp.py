@@ -34,7 +34,7 @@ def add_Log_Temp():
     query = "INSERT INTO final (Temperature, Humidity, Timestamp1) VALUES (%s, %s, %s);"
     query2 = "INSERT INTO piunit (pi_valuecelsius, pi_valuefahrenheit) VALUES (%s, %s);"
     query3 = "INSERT INTO pival (value_temp, value_hum, timestamp_) VALUES (%s, %s, %s);"
-    query4 = "INSERT INTO summary (pi_value) VALUES (%s);"
+    query4 = "INSERT INTO summary (pi_value) VALUES ( %s);"
 
     temp_data = request.json["Temperature"]
     fah_data = request.json["Fahrenheit"]
