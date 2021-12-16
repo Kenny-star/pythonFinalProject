@@ -44,14 +44,19 @@ def add_Log_Temp():
     val = (temp_data, hum_data, time_data)
     val2 = (temp_data, fah_data)
     val3 = (temp_data, hum_data, time_data)
-    val4 = temp_data
 
     mycursor.execute(query, val)
-    mycursor.execute(query2, val2)
-    mycursor.execute(query3, val3)
-    mycursor.execute(query4, val4)
-
     conn.commit()
+
+    mycursor.execute(query2, val2)
+    conn.commit()
+
+    mycursor.execute(query3, val3)
+    conn.commit()
+
+    mycursor.execute(query4, temp_data)
+    conn.commit()
+
     mycursor.close()
 
     conn.close()
