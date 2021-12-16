@@ -12,13 +12,15 @@ while True:
         temperature = dht.temperature
         humidity = dht.humidity
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
+        fahrenheit = (temperature * 9/5) + 32
         print("Temperature: %-3.1f C" % temperature)
+        print("Fahrenheit: %-3.1f F" % fahrenheit)
         print("Humidity: %-3.1f %%" % humidity)
 
         print("Last valid input: " + timestamp + "\n")
 
         current_info = {"Temperature": temperature,
+                        "Fahrenheit": fahrenheit,
                         "Humidity": humidity,
                         "Timestamp1": timestamp}
 
@@ -31,10 +33,11 @@ while True:
         print()
 
         with open('tempLog.csv', mode='a') as csv_file:
-            fieldnames = ['Temperature', 'Humidity', 'Timestamp1']
+            fieldnames = ['Temperature', 'Fahrenheit', 'Humidity', 'Timestamp1']
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
 
-            writer.writerow({'Temperature': temperature, 'Humidity': humidity, 'Timestamp1': timestamp})
+            writer.writerow({'Temperature': temperature, 'Fahrenheit': fahrenheit,
+                             'Humidity': humidity, 'Timestamp1': timestamp})
 
         time.sleep(10)
 
