@@ -24,7 +24,7 @@ while True:
                         "Humidity": humidity,
                         "Timestamp1": timestamp}
 
-        response = requests.post("https://webapprouting.herokuapp.com/addLogTemp", headers=myHeader, json=current_info)
+        response = requests.post("https://webapprouting3.herokuapp.com/addLogTemp", headers=myHeader, json=current_info)
 
         print(response)
         list.append(current_info)
