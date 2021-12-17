@@ -32,16 +32,31 @@ def add_Log_Temp():
     conn = connection.connect()
     mycursor = conn.cursor()
     query = "INSERT INTO final (Temperature, Humidity, Timestamp1) VALUES (%s, %s, %s);"
+    query2 = "INSERT INTO piunit (pi_valuecelsius, pi_valuefahrenheit) VALUES (%s, %s);"
+    query3 = "INSERT INTO pival (value_temp, value_hum, timestamp_) VALUES (%s, %s, %s);"
+    query4 = "INSERT INTO summary (pi_value, valueid, unitid) VALUES (%s, %s, %s);"
 
     temp_data = request.json["Temperature"]
+    fah_data = request.json["Fahrenheit"]
     hum_data = request.json["Humidity"]
     time_data = request.json["Timestamp1"]
 
     val = (temp_data, hum_data, time_data)
+    val2 = (temp_data, fah_data)
+    val3 = (temp_data, hum_data, time_data)
 
     mycursor.execute(query, val)
-
+    mycursor.execute(query2, val2)
     conn.commit()
+    value_id = mycursor.lastrowid
+    mycursor.execute(query3, val3)
+    conn.commit()
+    unit_id = mycursor.lastrowid
+
+    val4 = (temp_data, value_id, unit_id)
+    mycursor.execute(query4, val4)
+    conn.commit()
+
     mycursor.close()
 
     conn.close()
