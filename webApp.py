@@ -3,14 +3,24 @@ from flask import request, jsonify, abort
 import requests
 import connection
 from flask import Flask
+import mysql.connector
+import logging
 
 
 app = Flask(__name__)
+logging.basicConfig(filename='temp.log', filemode='a', format='%(levelname)s %(asctime)s - %(message)s', level=logging.DEBUG)
+logger = logging.getLogger()
 
 
 @app.route('/', methods=['GET'])
 def home():
-    conn = connection.connect()
+    try:
+        conn = connection.connect()
+        logger.info("Connected to database successfully")
+
+    except mysql.connector.Error as e:
+        logger.critical("Cannot connect to the database")
+
     mycursor = conn.cursor()
     query = "SELECT * FROM final"
     mycursor.execute(query)
@@ -24,12 +34,27 @@ def home():
 
     mycursor.close()
     conn.close()
+    logger.info("Successfully Displayed the data on the web service")
     return jsonify(json_array_data)
+
+    if len(result) ==0:
+        logger.error("There are no readings in the database")
+        abort(404)
+
+    if not request.json:
+        logger.error("JSON body was not provided")
+        abort(400)
 
 
 @app.route('/addLogTemp', methods=['POST'])
 def add_Log_Temp():
-    conn = connection.connect()
+    try:
+        conn = connection.connect()
+        logger.info("Connected to database successfully")
+
+    except mysql.connector.Error as e:
+        logger.critical("Cannot connect to the database")
+
     mycursor = conn.cursor()
     query = "INSERT INTO final (Temperature, Humidity, Timestamp1) VALUES (%s, %s, %s);"
     query2 = "INSERT INTO piunit (pi_valuecelsius, pi_valuefahrenheit) VALUES (%s, %s);"
@@ -60,9 +85,17 @@ def add_Log_Temp():
     mycursor.close()
 
     conn.close()
+    logger.info("Successfully posted readings")
 
     return app.response_class(status=201)
+
+    if not request.json:
+        logger.error("JSON body was not provided")
+        abort(400)
 
 
 if __name__ == '__main__':
     app.run()
+
+
+
