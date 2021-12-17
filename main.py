@@ -1,4 +1,4 @@
-from flask import Flask, time, datetime, csv,  # time, datetime, csv, adafruit_dht, board, requests
+from flask import Flask, time, datetime, csv, adafruit_dht, board, requests
 import RPi.GPIO as GPIO
 list = []
 myHeader = {'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,' 'image/webp,/;q=0.8',
