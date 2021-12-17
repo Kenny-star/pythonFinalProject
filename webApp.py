@@ -14,7 +14,10 @@ import logging
 
 
 app = Flask(__name__)
-logging.basicConfig(filename='temp.log', filemode='a', format='webApp.py-%(levelname)-%(message)')
+
+logging.basicConfig(filename='temp.log', filemode='a', format='%(levelname)s %(asctime)s - %(message)s', level=logging.DEBUG)
+logger = logging.getLogger()
+
 
 app.config.get('SECRET_KEY')
 users = {}
@@ -95,10 +98,11 @@ def login_user():
 def home():
     try:
         conn = connection.connect()
-        logging.info("Connected to database successfully")
+
+        logger.info("Connected to database successfully")
 
     except mysql.connector.Error as e:
-        logging.critical("Cannot connect to the database")
+        logger.critical("Cannot connect to the database")
 
 
     mycursor = conn.cursor()
@@ -114,15 +118,17 @@ def home():
 
     mycursor.close()
     conn.close()
-    logging.info("Successfully Displayed the data on the web service")
+
+    logger.info("Successfully Displayed the data on the web service")
     return jsonify(json_array_data)
 
     if len(result) ==0:
-        logging.error("There are no readings in the database")
+        logger.error("There are no readings in the database")
         abort(404)
 
     if not request.json:
-        logging.error("JSON body was not provided")
+        logger.error("JSON body was not provided")
+
         abort(400)
 
 
@@ -131,10 +137,11 @@ def home():
 def add_Log_Temp():
     try:
         conn = connection.connect()
-        logging.info("Connected to database successfully")
+
+        logger.info("Connected to database successfully")
 
     except mysql.connector.Error as e:
-        logging.critical("Cannot connect to the database")
+        logger.critical("Cannot connect to the database")
 
 
     mycursor = conn.cursor()
@@ -167,14 +174,21 @@ def add_Log_Temp():
     mycursor.close()
 
     conn.close()
-    logging.info("Successfully posted readings")
+
+    logger.info("Successfully posted readings")
+
 
     return app.response_class(status=201)
 
     if not request.json:
-        logging.error("JSON body was not provided")
+
+        logger.error("JSON body was not provided")
+
         abort(400)
 
 
 if __name__ == '__main__':
     app.run()
+
+
+
