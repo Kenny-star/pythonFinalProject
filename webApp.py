@@ -8,6 +8,7 @@ import logging
 
 
 app = Flask(__name__)
+
 logging.basicConfig(filename='temp.log', filemode='a', format='%(levelname)s %(asctime)s - %(message)s', level=logging.DEBUG)
 logger = logging.getLogger()
 
@@ -16,10 +17,12 @@ logger = logging.getLogger()
 def home():
     try:
         conn = connection.connect()
+
         logger.info("Connected to database successfully")
 
     except mysql.connector.Error as e:
         logger.critical("Cannot connect to the database")
+
 
     mycursor = conn.cursor()
     query = "SELECT * FROM final"
@@ -34,6 +37,7 @@ def home():
 
     mycursor.close()
     conn.close()
+
     logger.info("Successfully Displayed the data on the web service")
     return jsonify(json_array_data)
 
@@ -43,6 +47,7 @@ def home():
 
     if not request.json:
         logger.error("JSON body was not provided")
+
         abort(400)
 
 
@@ -50,10 +55,12 @@ def home():
 def add_Log_Temp():
     try:
         conn = connection.connect()
+
         logger.info("Connected to database successfully")
 
     except mysql.connector.Error as e:
         logger.critical("Cannot connect to the database")
+
 
     mycursor = conn.cursor()
     query = "INSERT INTO final (Temperature, Humidity, Timestamp1) VALUES (%s, %s, %s);"
@@ -85,12 +92,16 @@ def add_Log_Temp():
     mycursor.close()
 
     conn.close()
+
     logger.info("Successfully posted readings")
+
 
     return app.response_class(status=201)
 
     if not request.json:
+
         logger.error("JSON body was not provided")
+
         abort(400)
 
 

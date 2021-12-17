@@ -1,4 +1,5 @@
 import flask, RPi.GPIO as GPIO, time, datetime, csv, adafruit_dht, board, requests
+import logging
 
 import logging
 
@@ -10,9 +11,11 @@ dht = adafruit_dht.DHT11(board.D4, use_pulseio=False)
 
 while True:
     try:
+
         logging.basicConfig(filename='temp.log', filemode='w', format='%(levelname)s %(asctime)s - %(message)s',
                             level=logging.DEBUG)
         logger = logging.getLogger()
+
 
         temperature = dht.temperature
         humidity = dht.humidity
@@ -54,7 +57,9 @@ while True:
             writer.writerow({'Temperature': temperature, 'Fahrenheit': fahrenheit,
                              'Humidity': humidity, 'Timestamp1': timestamp})
 
+
         logger.info("Successfully stored data")
+
 
         time.sleep(10)
 
@@ -65,11 +70,14 @@ while True:
 
         logger.error("A runtime error as occured. The sensor will try again in 10 seconds")
 
+
         time.sleep(10)
         continue
 
     except Exception as error:
+
         logger.critical("A fatal errror as occured. The sensor will be stopped.")
+
         dht.exit()
         raise error
 
