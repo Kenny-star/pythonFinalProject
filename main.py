@@ -1,8 +1,5 @@
-
 import flask, RPi.GPIO as GPIO, time, datetime, csv, adafruit_dht, board, requests
-import logging
-
-import logging
+import logging, urllib.request
 
 list = []
 myHeader = {'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,' 'image/webp,/;q=0.8',
@@ -12,11 +9,9 @@ dht = adafruit_dht.DHT11(board.D4, use_pulseio=False)
 
 while True:
     try:
-
         logging.basicConfig(filename='temp.log', filemode='w', format='%(levelname)s %(asctime)s - %(message)s',
                             level=logging.DEBUG)
         logger = logging.getLogger()
-
 
         temperature = dht.temperature
         humidity = dht.humidity
@@ -33,37 +28,48 @@ while True:
                         "Humidity": humidity,
                         "Timestamp1": timestamp}
 
-        url = "https://webapprouting.herokuapp.com"
-        timeout = 5
+        url = 'https://webapprouting.herokuapp.com/'
 
         try:
-            req = requests.get(url, timeout=timeout)
-            print("Connected to the Internet")
 
-        except (requests.ConnectionError, requests.Timeout) as exception:
-            print("No Internet connection.")
+            urllib.request.urlopen(url, timeout=1)
+            logger.info("Connected to the Internet")
+            response = requests.post("https://webapprouting.herokuapp.com/addLogTemp", headers=myHeader,
+                                     json=current_info)
 
-        response = requests.post("https://webapprouting.herokuapp.com/addLogTemp", headers=myHeader, json=current_info)
+            print(response)
+            list.append(current_info)
 
-        print(response)
-        list.append(current_info)
+            print(list)
+            print()
+            logger.info("Successfully stored data")
 
-        print(list)
-        print()
+            time.sleep(10)
 
-        with open('tempLog.csv', mode='a') as csv_file:
+        except Exception as err:
+            logger.info("Not Connected to the Internet")
+
+            with open('tempLogWithoutInternet.csv', mode='a') as csv_file:
+                fieldnames = ['Temperature', 'Fahrenheit', 'Humidity', 'Timestamp1']
+                writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+
+                writer.writerow({'Temperature': temperature, 'Fahrenheit': fahrenheit,
+                                 'Humidity': humidity, 'Timestamp1': timestamp})
+
+            logger.info("Successfully stored data locally")
+
+            time.sleep(10)
+
+        with open('tempLogWithOrWithoutInternet.csv', mode='a') as csv_file:
             fieldnames = ['Temperature', 'Fahrenheit', 'Humidity', 'Timestamp1']
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
 
             writer.writerow({'Temperature': temperature, 'Fahrenheit': fahrenheit,
                              'Humidity': humidity, 'Timestamp1': timestamp})
 
-
-        logger.info("Successfully stored data")
-
+        logger.info("Successfully stored data locally")
 
         time.sleep(10)
-
 
     except RuntimeError as error:
         print("A Runtime Error has been encountered: " + error.args[
@@ -71,17 +77,13 @@ while True:
 
         logger.error("A runtime error as occured. The sensor will try again in 10 seconds")
 
-
         time.sleep(10)
         continue
 
     except Exception as error:
-
         logger.critical("A fatal errror as occured. The sensor will be stopped.")
-
         dht.exit()
         raise error
-
 
 
 

@@ -11,20 +11,19 @@ from functools import wraps
 import mysql.connector
 import logging
 
-
-
 app = Flask(__name__)
 
-logging.basicConfig(filename='temp.log', filemode='a', format='%(levelname)s %(asctime)s - %(message)s', level=logging.DEBUG)
+logging.basicConfig(filename='temp.log', filemode='a', format='%(levelname)s %(asctime)s - %(message)s',
+                    level=logging.DEBUG)
 logger = logging.getLogger()
-
 
 app.config.get('SECRET_KEY')
 users = {}
 items = {}
 
+
 class User:
-      def __init__(self, public_id, name, password, admin):
+    def __init__(self, public_id, name, password, admin):
         self.public_id = public_id
         self.name = name
         self.password = password
@@ -63,6 +62,7 @@ def token_required(f):
             return jsonify({'message': 'Token is invalid!'}), 401
 
         return f(current_user, *args, **kwargs)
+
     return decorator
 
 
@@ -104,7 +104,6 @@ def home():
     except mysql.connector.Error as e:
         logger.critical("Cannot connect to the database")
 
-
     mycursor = conn.cursor()
     query = "SELECT * FROM final"
     mycursor.execute(query)
@@ -122,7 +121,7 @@ def home():
     logger.info("Successfully Displayed the data on the web service")
     return jsonify(json_array_data)
 
-    if len(result) ==0:
+    if len(result) == 0:
         logger.error("There are no readings in the database")
         abort(404)
 
@@ -142,7 +141,6 @@ def add_Log_Temp():
 
     except mysql.connector.Error as e:
         logger.critical("Cannot connect to the database")
-
 
     mycursor = conn.cursor()
     query = "INSERT INTO final (Temperature, Humidity, Timestamp1) VALUES (%s, %s, %s);"
@@ -177,18 +175,45 @@ def add_Log_Temp():
 
     logger.info("Successfully posted readings")
 
-
     return app.response_class(status=201)
 
     if not request.json:
-
         logger.error("JSON body was not provided")
 
         abort(400)
 
 
+@app.route('/get/dates', methods=['GET'])
+@token_required
+def Range(current_user):
+    try:
+        conn = connection.connect()
+
+        logger.info("Connected to database successfully")
+
+    except mysql.connector.Error as e:
+        logger.critical("Cannot connect to the database")
+
+    start = request.json["startDate"]
+    end = request.json["endDate"]
+
+    mycursor = conn.cursor()
+
+    mycursor.execute("SELECT * FROM final WHERE Timestamp1 BETWEEN " +
+                     start + "AND" + end)
+    rows = [x[0] for x in mycursor.description]
+    values = mycursor.fetchall()
+    json = []
+
+    for z in values:
+        json.append(dict(zip(rows, x)))
+    return jsonify(json)
+
+
 if __name__ == '__main__':
     app.run()
+
+
 
 
 
