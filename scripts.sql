@@ -21,9 +21,22 @@ CREATE TABLE summary (
     pi_value float NOT NULL,
     valueid int NOT NULL,
     unitid int NOT NULL,
+    name varchar(255) NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT FK_Type FOREIGN KEY (valueid)
     REFERENCES pival(valueid),
     CONSTRAINT FK_Unit FOREIGN KEY (unitid)
-    REFERENCES piunit(unitid)
+    REFERENCES piunit(unitid),
+    CONSTRAINT FK_User FOREIGN KEY (name)
+    REFERENCES users(name)
+);
+
+
+CREATE TABLE user (
+    id int NOT NULL auto_increment,
+    public_id varchar(255) NOT NULL UNIQUE,
+    name varchar(255) NOT NULL UNIQUE,
+    password varchar(255) NOT NULL,
+    admin boolean NOT NULL default 0,
+    PRIMARY KEY (id)
 );
